@@ -60,11 +60,14 @@ app.get("/products", (req, res) => {
 //Post new book
 app.post("/products", (req, res) => {
 	console.log(req.body);
+	const category = req.body.category.toLowerCase();
 	const newItem = {
 		title: req.body.title,
 		description: req.body.description,
 		price: req.body.price,
 		image: req.body.image,
+		category: category,
+		isFeatured: !!req.body.featured
 	}
 	
 	Item.create(newItem)
@@ -82,6 +85,20 @@ app.post("/products", (req, res) => {
 //New product
 app.get("/products/new", (req, res) => {
 	res.render("new_product")
+});
+
+
+// Show route
+app.get("/products/:id", (req, res) => {
+	Item.findById(req.params.id)
+	.exec()
+	.then((item) =>{
+		res.render("products_show", {item})
+	})
+	.catch((err) => {
+		res.send(err)
+	})
+
 });
 
 
